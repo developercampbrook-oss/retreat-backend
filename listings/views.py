@@ -36,22 +36,17 @@ class RehabCenterListView(generics.ListAPIView):
         if treatment:
             queryset = queryset.filter(treatment_types__slug=treatment)
 
-        gender = self.request.query_params.get('gender')
-        if gender:
-            queryset = queryset.filter(gender=gender)
-
         price = self.request.query_params.get('price')
         if price:
             queryset = queryset.filter(price_range=price)
 
         category = self.request.query_params.get('category')
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = queryset.filter(centre_type=category)
 
         surrounding = self.request.query_params.get('surrounding')
         if surrounding:
-            queryset = queryset.filter(surrounding=surrounding)
-
+            queryset = queryset.filter(surroundings__contains=[surrounding])
 
         return queryset.distinct()
 
@@ -100,19 +95,11 @@ class FilterOptionsView(APIView):
             .order_by('city')
         )
 
-        # Surroundings
-        surroundings = list(
-            RehabCenter.objects.exclude(surrounding='')
-            .values_list('surrounding', flat=True)
-            .distinct()
-        )
-
-        # Genders
-        genders = list(
-            RehabCenter.objects.exclude(gender='')
-            .values_list('gender', flat=True)
-            .distinct()
-        )
+        # Surroundings — flatten JSONField list
+        surroundings_qs = RehabCenter.objects.exclude(surroundings=[]).values_list('surroundings', flat=True)
+        surroundings = list(set(
+            s for surr_list in surroundings_qs for s in (surr_list or [])
+        ))
 
         # Price ranges
         price_ranges = list(
@@ -123,8 +110,8 @@ class FilterOptionsView(APIView):
 
         # Categories
         categories = list(
-            RehabCenter.objects.exclude(category='')
-            .values_list('category', flat=True)
+            RehabCenter.objects.exclude(centre_type='')
+            .values_list('centre_type', flat=True)
             .distinct()
         )
 
@@ -144,7 +131,7 @@ class FilterOptionsView(APIView):
             'treatments': treatments,
             'cities': cities,
             'surroundings': surroundings,
-            'genders': genders,
+            'genders': [],
             'price_ranges': price_ranges,
             'categories': categories,
             'languages': all_languages,

@@ -1,10 +1,16 @@
 from django.db import models
 from wagtail.models import Page
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
+from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.api import APIField
 from wagtail.images.api.fields import ImageRenditionField
 from modelcluster.fields import ParentalKey
+
+
+CONTENT_STREAMFIELD_BLOCKS = [
+    ('rich_text', blocks.RichTextBlock()),
+]
 
 
 class FAQItem(models.Model):
@@ -36,8 +42,8 @@ class CityLandingPage(Page):
         related_name='+'
     )
     default_city = models.CharField(max_length=100, blank=True)
-    intro = RichTextField(blank=True)
-    about = RichTextField(blank=True)
+    intro = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
+    about = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     seo_title_override = models.CharField(max_length=255, blank=True)
     seo_description = models.TextField(max_length=300, blank=True)
 
@@ -113,8 +119,8 @@ class TreatmentLandingPage(Page):
         related_name='+'
     )
     default_treatment_slug = models.CharField(max_length=100, blank=True)
-    intro = RichTextField(blank=True)
-    about = RichTextField(blank=True)
+    intro = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
+    about = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     seo_title_override = models.CharField(max_length=255, blank=True)
     seo_description = models.TextField(max_length=300, blank=True)
 
@@ -178,7 +184,7 @@ class SEOLandingPage(Page):
     # Hero Section
     hero_title = models.CharField(max_length=255)
     hero_subtitle = models.TextField(blank=True)
-    hero_left_text = RichTextField(blank=True, help_text='Rich text shown on left side of hero')
+    hero_left_text = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True, help_text='Content shown on left side of hero')
     hero_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True, blank=True,
@@ -192,19 +198,19 @@ class SEOLandingPage(Page):
     hero_badge_4 = models.CharField(max_length=100, blank=True, help_text='e.g. 100% Confidential')
 
     # Intro Section
-    intro_text = RichTextField(blank=True)
+    intro_text = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
 
     # Content Sections
     section_1_title = models.CharField(max_length=255, blank=True)
-    section_1_content = RichTextField(blank=True)
+    section_1_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     section_2_title = models.CharField(max_length=255, blank=True)
-    section_2_content = RichTextField(blank=True)
+    section_2_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     section_3_title = models.CharField(max_length=255, blank=True)
-    section_3_content = RichTextField(blank=True)
+    section_3_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     section_4_title = models.CharField(max_length=255, blank=True)
-    section_4_content = RichTextField(blank=True)
+    section_4_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     section_5_title = models.CharField(max_length=255, blank=True)
-    section_5_content = RichTextField(blank=True)
+    section_5_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
 
     # Rehab Listings
     listing_section_title = models.CharField(max_length=255, default='Top Rehabs')
@@ -216,15 +222,15 @@ class SEOLandingPage(Page):
 
     # Bottom Content Sections
     bottom_section_1_title = models.CharField(max_length=255, blank=True)
-    bottom_section_1_content = RichTextField(blank=True)
+    bottom_section_1_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     bottom_section_2_title = models.CharField(max_length=255, blank=True)
-    bottom_section_2_content = RichTextField(blank=True)
+    bottom_section_2_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
     bottom_section_3_title = models.CharField(max_length=255, blank=True)
-    bottom_section_3_content = RichTextField(blank=True)
+    bottom_section_3_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
 
     # Final CTA
     final_thoughts_title = models.CharField(max_length=255, blank=True)
-    final_thoughts_content = RichTextField(blank=True)
+    final_thoughts_content = StreamField(CONTENT_STREAMFIELD_BLOCKS, blank=True)
 
     # SEO
     seo_title_override = models.CharField(max_length=255, blank=True)

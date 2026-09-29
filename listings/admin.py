@@ -26,6 +26,12 @@ class RehabCenterAdminForm(forms.ModelForm):
     in_room_facilities = MultiCheckboxField(choices=IN_ROOM_FACILITIES_CHOICES, required=False)
     center_facilities = MultiCheckboxField(choices=CENTER_FACILITIES_CHOICES, required=False)
     activities = MultiCheckboxField(choices=ACTIVITIES_CHOICES, required=False)
+    treatment_types = forms.ModelMultipleChoiceField(  # ← add this
+        queryset=TreatmentType.objects.all().order_by('category', 'name'),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Treatment Types'
+    )
 
     class Meta:
         model = RehabCenter
@@ -108,8 +114,8 @@ class RehabCenterAdmin(admin.ModelAdmin):
         ('Surroundings', {
             'fields': ('surroundings',)
         }),
-        ('Treatments', {
-            'fields': ('treatments', 'treatment_types')
+        ('Treatments', {          # ← add this
+        'fields': ('treatment_types',)
         }),
         ('Patient Profile', {
             'fields': ('patient_profiles',)
@@ -127,7 +133,7 @@ class RehabCenterAdmin(admin.ModelAdmin):
             'fields': ('activities',)
         }),
         ('Additional', {
-            'fields': ('amenities', 'therapies', 'videos')
+            'fields': ('videos',)
         }),
         ('SEO', {
             'fields': ('seo_title', 'seo_description'),
