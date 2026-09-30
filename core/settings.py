@@ -17,7 +17,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://retreatindia-frontend-production.up.railway.app",
+    "https://retreat-frontend-production.up.railway.app",
 ]
 
 INSTALLED_APPS = [
